@@ -1,0 +1,17 @@
+LICENSE
+MANIFEST.in
+README.md
+binding.cpp
+core.cu
+core.h
+core_compact.cu
+core_gather.cu
+requirements.txt
+setup.py
+warp_rnnt/__init__.py
+warp_rnnt/test.py
+warp_rnnt.egg-info/PKG-INFO
+warp_rnnt.egg-info/SOURCES.txt
+warp_rnnt.egg-info/dependency_links.txt
+warp_rnnt.egg-info/requires.txt
+warp_rnnt.egg-info/top_level.txt
