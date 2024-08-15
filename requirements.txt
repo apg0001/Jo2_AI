@@ -1,7 +1,0 @@
-flask
-requests
-openai
-flask-session
-omegaconf
-pytorch-lightning==1.6.0
-librosa

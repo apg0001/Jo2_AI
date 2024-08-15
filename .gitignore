@@ -1,4 +1,0 @@
-# models/multi_head_las_aug.ckpt
-*.ckpt
-# .gitignore
-__pycache__/
