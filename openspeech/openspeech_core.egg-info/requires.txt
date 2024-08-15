@@ -1,0 +1,10 @@
+torch>=1.6.0
+levenshtein
+numpy
+pandas
+astropy
+sentencepiece
+pytorch-lightning
+hydra-core
+wget
+wandb
