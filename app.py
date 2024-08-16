@@ -1,9 +1,10 @@
-from flask import Flask, request, jsonify, session
+from flask import Flask, request, jsonify, session, send_file
 from flask_session import Session
 from chatbot_service import get_chat_response, get_score_from_intent, ask_phq9_question, phq9_questions, evaluate_overall_depression, upload_and_predict, summarize_depression_analysis
 import os
 import datetime
 import requests
+import pyttsx3
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'supersecretkey'
@@ -13,6 +14,7 @@ Session(app)
 
 TARGET_SERVER_URL = 'https://example.com/receive_data'  # 데이터를 전송할 대상 서버의 URL
 WAVE_OUTPUT_FILENAME = "./audio/record.wav"  # 클라이언트로부터 받은 오디오 파일 저장 경로
+TTS_OUTPUT_FILENAME = "./audio/response.mp3"  # TTS로 생성된 음성 파일 저장 경로
 
 @app.before_request
 def make_session_permanent():
@@ -78,7 +80,7 @@ def chat():
 
 @app.route('/api/chatbot/voice', methods=['POST'])
 def voice_chat():
-    """클라이언트로부터 음성 파일을 받아 처리하고 OpenAI API로 전송"""
+    """클라이언트로부터 음성 파일을 받아 처리하고 OpenAI API로 전송 후, 응답을 음성 파일로 반환"""
     if 'file' not in request.files:
         return jsonify({'error': 'Audio file is required'}), 400
 
@@ -90,6 +92,16 @@ def voice_chat():
     corrected_text = upload_and_predict(WAVE_OUTPUT_FILENAME)
 
     result, status_code = process_chat_message(corrected_text)
+    
+    if status_code == 200:
+        # TTS 변환
+        tts_engine = pyttsx3.init()
+        tts_engine.save_to_file(result['response'], TTS_OUTPUT_FILENAME)
+        tts_engine.runAndWait()
+
+        # 음성 파일 반환
+        return send_file(TTS_OUTPUT_FILENAME, mimetype='audio/mp3')
+
     return jsonify(result), status_code
 
 @app.route('/api/chatbot/end', methods=['POST'])
