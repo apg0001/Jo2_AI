@@ -82,13 +82,13 @@ Request Body:
 
 Response:
 
-```json
-{
-  "response": "string",
-  "current_score": "number",
-  "total_score": "number"
-}
-```
+    ```json
+    {
+    "response": "string",
+    "current_score": "number",
+    "total_score": "number"
+    }
+    ```
 
 3. 음성 채팅 (Voice Chat)
    URL: /api/chatbot/voice
