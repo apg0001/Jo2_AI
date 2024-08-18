@@ -24,12 +24,14 @@
 
 1. **리포지토리 클론**
    ```bash
-   git clone https://github.com/username/repository-name.git
-   cd repository-name
+   git clone https://github.com/Uul2/Jo2_AI.git
+   cd Jo2_AI
    ```
 2. 필요한 패키지 설치
 
    ```bash
+   cd openspeech
+   pip isntall -e .
    pip install -r requirements.txt
    ```
 
