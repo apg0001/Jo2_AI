@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, session, send_file
+from flask_cors import CORS  # CORS 라이브러리 임포트
 from flask_session import Session
 from chatbot_service import get_chat_response, get_score_from_intent, ask_phq9_question, phq9_questions, evaluate_overall_depression, upload_and_predict, summarize_depression_analysis, analyze_overall_chat
 from models import ChatRequest, ChatResponse
@@ -8,6 +9,8 @@ import requests
 import pyttsx3
 
 app = Flask(__name__)
+CORS(app)
+
 app.config['SECRET_KEY'] = 'supersecretkey'
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(minutes=10)  # 세션 타임아웃 10분 설정
@@ -120,6 +123,8 @@ def end_chat():
         # 'chat_history': chat_history
         'overall_analyze': analyze_chat
     }
+    
+    print(chat_history)
     
     print(data_to_send)
 
