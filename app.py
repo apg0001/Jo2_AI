@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify, session, send_file
 from flask_session import Session
-from chatbot_service import get_chat_response, get_score_from_intent, ask_phq9_question, phq9_questions, evaluate_overall_depression, upload_and_predict, summarize_depression_analysis
+from chatbot_service import get_chat_response, get_score_from_intent, ask_phq9_question, phq9_questions, evaluate_overall_depression, upload_and_predict, summarize_depression_analysis, analyze_overall_chat
+from models import ChatRequest, ChatResponse
 import os
 import datetime
 import requests
@@ -65,6 +66,8 @@ def process_chat_message(message):
             session['chat_history'].append({'role': 'assistant', 'content': result['response']})  # 채팅 내역에 추가
             return result, 200
     else:
+        chat_request = ChatRequest(message=message)  # ChatRequest 객체 생성
+        chat_response = get_chat_response(chat_request)
         chat_response = get_chat_response(message)
         session['chat_history'].append({'role': 'assistant', 'content': chat_response})  # 챗봇 응답 추가
         return {'response': chat_response}, 200
@@ -108,12 +111,14 @@ def voice_chat():
 def end_chat():
     chat_history = session.get('chat_history', [])
     overall_assessment = evaluate_overall_depression(chat_history)
+    analyze_chat = analyze_overall_chat(chat_history)
 
     data_to_send = {
         'user_id': session.get('user_id'),  # 세션에 저장된 사용자 ID
-        'session_id': session.sid,
-        'overall_assessment': overall_assessment,
-        'chat_history': chat_history
+        # 'session_id': session.sid,
+        'overall_score': overall_assessment,
+        # 'chat_history': chat_history
+        'overall_analyze': analyze_chat
     }
 
     # 다른 서버로 데이터 전송
