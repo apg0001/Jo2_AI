@@ -32,7 +32,7 @@ def get_chat_response(chat_request: ChatRequest) -> ChatResponse:
         {"role": "system", "content": "You are a helpful assistant. You only provide responses related to depression assessment or casual daily conversations. If a user asks about another topic, politely remind them that you can only discuss depression and daily life."},
         {"role": "user", "content": chat_request.message}
     ],
-    max_tokens=100,
+    max_tokens=200,
     temperature=0.5)
 
     bot_response = response.choices[0].message.content.strip()
@@ -76,7 +76,7 @@ def evaluate_overall_depression(chat_history) -> dict:
 def analyze_overall_chat(chat_history) -> dict:
     response = client.chat.completions.create(model="gpt-3.5-turbo",
     messages=[
-        {"role": "system", "content": "다음 대화를 요약해 줄 수 있을까?:\n"},
+        {"role": "system", "content": "다음 대화를 우울증 상담의 관점에서 요약해 줄 수 있을까?:\n"},
         {"role": "user", "content": "\n".join([f"{msg['role']}: {msg['content']}" for msg in chat_history])}
     ],
     max_tokens=100,
@@ -91,13 +91,15 @@ def summarize_depression_analysis(text: str) -> str:
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": f"Summarize the following depression analysis in 300 characters or less: '{text}'"}
+            {"role": "user", "content": f"날짜, 점수(10에 가까울수록 우울함), 대화 요약 정보를 여러개 줄 거야. 사용자의 우울증 상태가 어떻게 변화하는지 분석해주고 진단 및 조언을 줘. 결과는 마크다운 형식으로 나한테 줘. 총 글자 수는 300자 정도 됐으면 좋겠어.: '{text}'"}
         ],
-        max_tokens=100,
+        max_tokens=500,
         temperature=0.5
     )
 
-    summary = response.choices[0].message['content'].strip()
+    # summary = response.choices[0].message['content'].strip()
+    # 이전에는 response.choices[0].message['content'].strip()로 접근했으나, 최신 방식으로 수정
+    summary = response.choices[0].message.content.strip()
     return summary
 
 # 음성 인식 설정

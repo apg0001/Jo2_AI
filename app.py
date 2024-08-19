@@ -68,9 +68,9 @@ def process_chat_message(message):
     else:
         chat_request = ChatRequest(message=message)  # ChatRequest 객체 생성
         chat_response = get_chat_response(chat_request)
-        chat_response = get_chat_response(message)
-        session['chat_history'].append({'role': 'assistant', 'content': chat_response})  # 챗봇 응답 추가
-        return {'response': chat_response}, 200
+        # chat_response = get_chat_response(message)
+        session['chat_history'].append({'role': 'assistant', 'content': chat_response.response})  # 챗봇 응답 추가
+        return {'response': chat_response.to_dict()}, 200
 
 @app.route('/api/chatbot/chat', methods=['POST'])
 def chat():
@@ -120,12 +120,21 @@ def end_chat():
         # 'chat_history': chat_history
         'overall_analyze': analyze_chat
     }
+    
+    print(data_to_send)
 
-    # 다른 서버로 데이터 전송
-    response = requests.post(TARGET_SERVER_URL, json=data_to_send)
+    # # 다른 서버로 데이터 전송
+    # response = requests.post(TARGET_SERVER_URL, json=data_to_send)
+    
+    # try:
+    #     server_response = response.json()  # JSON 응답 파싱 시도
+    # except requests.exceptions.JSONDecodeError:
+    #     server_response = response.text  # JSON 파싱 실패 시, 텍스트 응답 반환
+    #     print("response error")
 
     session.clear()  # 세션 데이터를 삭제하여 세션을 종료합니다.
-    return jsonify({'response': '채팅이 종료되었습니다. 세션이 종료되었습니다.', 'server_response': response.json()})
+    # return jsonify({'response': '채팅이 종료되었습니다. 세션이 종료되었습니다.', 'server_response': response.json()})
+    return jsonify({'response': '채팅이 종료되었습니다. 세션이 종료되었습니다.'})
 
 @app.route('/api/chatbot/analyze', methods=['POST'])
 def analyze_depression_trend():
