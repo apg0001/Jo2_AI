@@ -10,6 +10,7 @@ import pyttsx3
 
 app = Flask(__name__)
 CORS(app)
+#CORS(app, origins=["http://localhost:3000", "https://your-frontend-domain.com"])
 
 app.config['SECRET_KEY'] = 'supersecretkey'
 app.config['SESSION_TYPE'] = 'filesystem'
