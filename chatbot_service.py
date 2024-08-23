@@ -217,8 +217,9 @@ def upload_and_predict(filepath):
     print("Original Prediction:", prediction)
 
     # 교정된 텍스트 출력
-    corrected_text = correct_text(prediction, device="cuda")
-    print("Corrected Text:", corrected_text)
+    # corrected_text = correct_text(prediction, device="cuda")
+    # print("Corrected Text:", corrected_text)
+    corrected_text = prediction
 
     # 교정된 텍스트를 OpenAI API로 전송
     chat_response = send_to_openai_chat(corrected_text)
