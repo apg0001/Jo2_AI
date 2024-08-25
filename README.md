@@ -63,7 +63,7 @@ python app.py
 
    ```json
    {
-     "user_id": "string"
+     "user_id": int
    }
    ```
 
