@@ -9,13 +9,15 @@ import requests
 import pyttsx3
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, supports_credentials=True)
 # CORS(app, origins=["http://localhost:3000", "https://your-frontend-domain.com"])
 
 app.config['SECRET_KEY'] = 'supersecretkey'
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(
     minutes=10)  # 세션 타임아웃 10분 설정
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+app.config['SESSION_COOKIE_SECURE'] = True  # HTTPS에서만 동작, 로컬 개발 시 False로 설정 가능
 Session(app)
 
 TARGET_SERVER_URL = 'https://example.com/receive_data'  # 데이터를 전송할 대상 서버의 URL
@@ -106,7 +108,7 @@ def voice_chat():
     # # 음성 파일 저장
     # audio_file = request.files['file']
     # audio_file.save(WAVE_OUTPUT_FILENAME)
-    
+
     audio_file = request.files["audio"]
     # audio_path = os.path.join("audio", "input.wav")
     audio_file.save(WAVE_OUTPUT_FILENAME)
@@ -126,12 +128,12 @@ def voice_chat():
     #     return send_file(TTS_OUTPUT_FILENAME, mimetype='audio/mp3')
 
     # return jsonify(result), status_code
-    
+
     response = {
         "recognizedText": corrected_text,
         "response": result
     }
-    
+
     return jsonify(response), status_code
 
 
@@ -194,7 +196,7 @@ def analyze_depression_trend():
 
     # 리스트의 각 항목을 특정 형식의 문자열로 변환
     parsed_string = ', '.join(
-        f"{item['date']}/{item['dayofweek']}/{item['result']}/{item['score']}" 
+        f"{item['date']}/{item['dayofweek']}/{item['result']}/{item['score']}"
         for item in weather_list
     )
 
