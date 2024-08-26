@@ -15,9 +15,9 @@ CORS(app, supports_credentials=True)
 app.config['SECRET_KEY'] = 'supersecretkey'
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(
-    minutes=10)  # 세션 타임아웃 10분 설정
-app.config['SESSION_COOKIE_SAMESITE'] = 'None'
-app.config['SESSION_COOKIE_SECURE'] = True  # HTTPS에서만 동작, 로컬 개발 시 False로 설정 가능
+    minutes=60)  # 세션 타임아웃 10분 설정
+# app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+# app.config['SESSION_COOKIE_SECURE'] = False  # HTTPS에서만 동작, 로컬 개발 시 False로 설정 가능
 Session(app)
 
 TARGET_SERVER_URL = 'https://example.com/receive_data'  # 데이터를 전송할 대상 서버의 URL
