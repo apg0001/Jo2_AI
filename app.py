@@ -44,6 +44,7 @@ def start_chat():
 
 
 def process_chat_message(message):
+    print("processing chat,,,: ", session['user_id'])
     """메시지(텍스트 또는 음성 변환 텍스트)를 처리하는 함수"""
     if 'phq9_index' not in session:
         return {'error': '세션이 만료되었거나 유효하지 않습니다. 새로운 세션을 시작하세요.'}, 403
@@ -88,6 +89,7 @@ def process_chat_message(message):
 @app.route('/api/chatbot/chat', methods=['POST'])
 def chat():
     data = request.json
+    print(data)
     if 'message' not in data:
         return jsonify({'error': 'Message field is required'}), 400
 
@@ -129,6 +131,8 @@ def voice_chat():
         "recognizedText": corrected_text,
         "response": result
     }
+    
+    return jsonify(response), status_code
 
 
 @app.route('/api/chatbot/end', methods=['POST'])
