@@ -46,7 +46,7 @@ def start_chat():
 
 
 def process_chat_message(message):
-    print("processing chat,,,: ", session['user_id'])
+    print("processing chat,,,: ", message)
     """메시지(텍스트 또는 음성 변환 텍스트)를 처리하는 함수"""
     if 'phq9_index' not in session:
         return {'error': '세션이 만료되었거나 유효하지 않습니다. 새로운 세션을 시작하세요.'}, 403
