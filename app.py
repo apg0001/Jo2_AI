@@ -110,16 +110,21 @@ def voice_chat():
 
     result, status_code = process_chat_message(corrected_text)
 
-    if status_code == 200:
-        # TTS 변환
-        tts_engine = pyttsx3.init()
-        tts_engine.save_to_file(result['response'], TTS_OUTPUT_FILENAME)
-        tts_engine.runAndWait()
+    # if status_code == 200:
+    #     # TTS 변환
+    #     tts_engine = pyttsx3.init()
+    #     tts_engine.save_to_file(result['response'], TTS_OUTPUT_FILENAME)
+    #     tts_engine.runAndWait()
 
-        # 음성 파일 반환
-        return send_file(TTS_OUTPUT_FILENAME, mimetype='audio/mp3')
+    #     # 음성 파일 반환
+    #     return send_file(TTS_OUTPUT_FILENAME, mimetype='audio/mp3')
 
-    return jsonify(result), status_code
+    # return jsonify(result), status_code
+    
+    response = {
+        "recognizedText": corrected_text,
+        "response": result
+    }
 
 
 @app.route('/api/chatbot/end', methods=['POST'])
@@ -159,14 +164,35 @@ def end_chat():
     })
 
 
+# @app.route('/api/chatbot/analyze', methods=['POST'])
+# def analyze_depression_trend():
+#     """우울증 점수와 분석을 받아 요약된 분석을 생성"""
+#     data = request.json
+#     if 'text' not in data:
+#         return jsonify({'error': 'Text field is required'}), 400
+
+#     summary = summarize_depression_analysis(data['text'])
+#     return jsonify({'summary': summary})
+
 @app.route('/api/chatbot/analyze', methods=['POST'])
 def analyze_depression_trend():
     """우울증 점수와 분석을 받아 요약된 분석을 생성"""
     data = request.json
-    if 'text' not in data:
-        return jsonify({'error': 'Text field is required'}), 400
 
-    summary = summarize_depression_analysis(data['text'])
+    if 'weatherList' not in data or not isinstance(data['weatherList'], list):
+        return jsonify({'error': 'weatherList must be a list of weather data'}), 400
+
+    weather_list = data['weatherList']
+
+    # 리스트의 각 항목을 특정 형식의 문자열로 변환
+    parsed_string = ', '.join(
+        f"{item['date']}/{item['dayofweek']}/{item['result']}/{item['score']}" 
+        for item in weather_list
+    )
+
+    # 이 문자열을 summarize_depression_analysis 함수로 전달
+    summary = summarize_depression_analysis(parsed_string)
+
     return jsonify({'summary': summary})
 
 

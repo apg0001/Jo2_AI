@@ -91,7 +91,7 @@ def summarize_depression_analysis(text: str) -> str:
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
-            {"role": "user", "content": f"날짜, 점수(10에 가까울수록 우울함), 대화 요약 정보를 여러개 줄 거야. 사용자의 우울증 상태가 어떻게 변화하는지 분석해주고 진단 및 조언을 줘. 결과는 마크다운 형식으로 나한테 줘. 총 글자 수는 300자 정도 됐으면 좋겠어.: '{text}'"}
+            {"role": "user", "content": f"날짜, 점수(10에 가까울수록 우울함), 대화 요약 정보를 여러개 줄 거야. 사용자의 우울증 상태가 어떻게 변화하는지 분석해주고 진단 및 조언을 줘. 분석 결과, 진단, 조언 이렇게 세 파트로 나눠서 답변을 줘. 결과는 마크다운으로 나한테 줘. 마크다운 문법을 사용해서 보기 좋게 줬으면 좋겠어. 줄바꿈은 개행문자 이스케이프 시퀀스 대신 공백 두 번으로 해줘. 총 글자 수는 300자 정도 됐으면 좋겠어.: '{text}'"}
         ],
         max_tokens=500,
         temperature=0.5
@@ -100,6 +100,9 @@ def summarize_depression_analysis(text: str) -> str:
     # summary = response.choices[0].message['content'].strip()
     # 이전에는 response.choices[0].message['content'].strip()로 접근했으나, 최신 방식으로 수정
     summary = response.choices[0].message.content.strip()
+    print(summary)
+    md_summary = summary.replace("\n", "  ")
+    print(md_summary)
     return summary
 
 # 음성 인식 설정
