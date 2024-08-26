@@ -98,11 +98,15 @@ def chat():
 @app.route('/api/chatbot/voice', methods=['POST'])
 def voice_chat():
     """클라이언트로부터 음성 파일을 받아 처리하고 OpenAI API로 전송 후, 응답을 음성 파일로 반환"""
-    if 'file' not in request.files:
-        return jsonify({'error': 'Audio file is required'}), 400
+    # if 'file' not in request.files:
+    #     return jsonify({'error': 'Audio file is required'}), 400
 
-    # 음성 파일 저장
-    audio_file = request.files['file']
+    # # 음성 파일 저장
+    # audio_file = request.files['file']
+    # audio_file.save(WAVE_OUTPUT_FILENAME)
+    
+    audio_file = request.files["audio"]
+    # audio_path = os.path.join("audio", "input.wav")
     audio_file.save(WAVE_OUTPUT_FILENAME)
 
     # 음성 인식 및 텍스트 추론 수행
