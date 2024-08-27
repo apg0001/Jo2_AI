@@ -16,9 +16,10 @@ app.config['SECRET_KEY'] = 'supersecretkey'
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(
     minutes=60)  # 세션 타임아웃 60분 설정
-# app.config['SESSION_COOKIE_SAMESITE'] = 'None'
-app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
-app.config['SESSION_COOKIE_SECURE'] = False  # HTTPS에서만 동작, 로컬 개발 시 False로 설정 가능
+app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+# app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['SESSION_COOKIE_SECURE'] = True  # HTTPS에서만 동작, 로컬 개발 시 False로 설정 가능
+# app.config['SESSION_COOKIE_SECURE'] = False
 app.config['SESSION_COOKIE_HTTPONLY'] = False # HttpOnly 속성을 False로 설정
 Session(app)
 
