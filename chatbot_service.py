@@ -79,7 +79,7 @@ def analyze_overall_chat(chat_history) -> dict:
         {"role": "system", "content": "다음 대화를 우울증 상담의 관점에서 100글자 이내로 요약해 줄 수 있을까?:\n"},
         {"role": "user", "content": "\n".join([f"{msg['role']}: {msg['content']}" for msg in chat_history])}
     ],
-    max_tokens=100,
+    max_tokens=150,
     temperature=0.5)
 
     overall_assessment = response.choices[0].message.content.strip()
