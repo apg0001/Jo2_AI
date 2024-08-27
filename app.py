@@ -16,7 +16,8 @@ app.config['SECRET_KEY'] = 'supersecretkey'
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(
     minutes=60)  # 세션 타임아웃 60분 설정
-app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+# app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config['SESSION_COOKIE_SECURE'] = False  # HTTPS에서만 동작, 로컬 개발 시 False로 설정 가능
 app.config['SESSION_COOKIE_HTTPONLY'] = False # HttpOnly 속성을 False로 설정
 Session(app)
@@ -44,9 +45,12 @@ def start_chat():
     session['completed_phq9'] = False
     session['chat_history'] = []  # 채팅 내역 초기화
     return jsonify({'message': '새로운 세션이 시작되었습니다.', 'user_id': session['user_id']})
-    # response = make_response("새로운 세션이 시작되었습니다.")
+    # response = make_response("새로운 세션이 시작되었습니다. user_id: " + str(session['user_id']))
     # response.set_cookie('user_id', str(session.get('user_id')), httponly=False)
-    return response
+    # for header, value in response.headers.items():
+    #     print(f'{header}: {value}')
+    # print(response.get_data(as_text=True))
+    # return response
 
 
 def process_chat_message(message):
