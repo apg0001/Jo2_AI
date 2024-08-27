@@ -202,7 +202,7 @@ def analyze_depression_trend():
 
     # 리스트의 각 항목을 특정 형식의 문자열로 변환
     parsed_string = ', '.join(
-        f"{item['date']}/{item['dayofweek']}/{item['result']}/{item['score']}"
+        f"{item['createAt']}/{item['dayofweek']}/{item['result']}/{item['score']}"
         for item in weather_list
     )
 
