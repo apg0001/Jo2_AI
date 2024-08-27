@@ -97,8 +97,8 @@ python app.py
     "response": "string",
     "current_score": "number",
     "total_score": "number"
-  }
-  status_code
+  },
+  "status_code"
   ```
 
 3. 음성 채팅 (Voice Chat)
@@ -140,7 +140,7 @@ python app.py
    - backend 서버로부터 받는 Response
    ```json
    {
-      "message": 채팅 요약과 점수 저장 완료
+      "message": "채팅 요약과 점수 저장 완료"
    }
    ```   
 6. 우울증 분석 요약 (Analyze Depression Trend)
