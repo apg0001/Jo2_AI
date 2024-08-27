@@ -96,6 +96,7 @@ def process_chat_message(message):
 
 @app.route('/api/chatbot/chat', methods=['POST'])
 def chat():
+    print(request.headers)
     data = request.json
     print(data)
     if 'message' not in data:
