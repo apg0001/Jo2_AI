@@ -63,7 +63,7 @@ python app.py
 
    ```json
    {
-     "user_id": int
+     "user_id": "int"
    }
    ```
 
@@ -72,7 +72,7 @@ python app.py
    ```json
    {
      "message": "새로운 세션이 시작되었습니다.",
-     "user_id": "string"
+     "user_id": "int"
    }
    ```
 
@@ -98,6 +98,7 @@ python app.py
     "current_score": "number",
     "total_score": "number"
   }
+  status_code
   ```
 
 3. 음성 채팅 (Voice Chat)
@@ -109,9 +110,8 @@ python app.py
    - Response:
    ```json
    {
-     "response": "string",
-     "current_score": "number",
-     "total_score": "number"
+     "response": "string", # 챗봇 응답
+     "recognizedText": "string", # 음성인식 결과
    }
    ```
 4. 채팅 종료 (End Chat)
@@ -122,17 +122,51 @@ python app.py
    ```json
    {
      "response": "채팅이 종료되었습니다. 세션이 종료되었습니다.",
-     "server_response": {}
+     "score": "int", #우울증 점수 10점 만점, 10점에 가까울수록 우울함
+     "summary": "string" #채팅 요약
    }
    ```
-5. 우울증 분석 요약 (Analyze Depression Trend)
+   
+   - backend 서버로 보내는 Request
+  
+   ```json
+   {
+      "user_id": "String",
+      "score": 35,
+      "summary": "String"
+   }
+   ```
+   - backend 서버로부터 받는 Response
+   ```json
+   {
+      "message": 채팅 요약과 점수 저장 완료
+   }
+   ```   
+6. 우울증 분석 요약 (Analyze Depression Trend)
    - URL: /api/chatbot/analyze
    - Method: POST
    - 설명: 클라이언트로부터 제공된 우울증 점수 및 분석 텍스트를 요약합니다.
    - Request Body:
    ```json
    {
-     "text": "string"
+       "weatherList": [
+           {
+               "id": "int",
+               "result": "String",
+               "score": "int",
+               "dayofweek": "String",
+               "createdAt": "LocalDateTime",
+               "updateAt": "LocalDateTime"
+           },
+           {
+               "id": "int",
+               "result": "String",
+               "score": "int",
+               "dayofweek": "String",
+               "createdAt": "LocalDateTime",
+               "updateAt": "LocalDateTime"
+           },
+       ]
    }
    ```
    - Response:
