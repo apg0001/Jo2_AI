@@ -110,8 +110,8 @@ python app.py
    - Response:
    ```json
    {
-     "response": "string", # 챗봇 응답
-     "recognizedText": "string", # 음성인식 결과
+     "response": "string", "# 챗봇 응답"
+     "recognizedText": "string", "# 음성인식 결과"
    }
    ```
 4. 채팅 종료 (End Chat)
@@ -122,8 +122,9 @@ python app.py
    ```json
    {
      "response": "채팅이 종료되었습니다. 세션이 종료되었습니다.",
-     "score": "int", #우울증 점수 10점 만점, 10점에 가까울수록 우울함
-     "summary": "string" #채팅 요약
+     "score": "int", "#우울증 점수 10점 만점, 10점에 가까울수록 우울함"
+     "summary": "string" "#채팅 요약",
+     "server_response": "status_code" "#서버로부터 받은 상태코드"
    }
    ```
    
