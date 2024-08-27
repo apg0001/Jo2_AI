@@ -20,7 +20,7 @@ app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 # app.config['SESSION_COOKIE_SECURE'] = False  # HTTPS에서만 동작, 로컬 개발 시 False로 설정 가능
 Session(app)
 
-TARGET_SERVER_URL = 'https://example.com/receive_data'  # 데이터를 전송할 대상 서버의 URL
+TARGET_SERVER_URL = 'http://52.79.169.5:8080/api/v1/weather/score'  # 데이터를 전송할 대상 서버의 URL
 WAVE_OUTPUT_FILENAME = "./audio/record.wav"  # 클라이언트로부터 받은 오디오 파일 저장 경로
 TTS_OUTPUT_FILENAME = "./audio/response.mp3"  # TTS로 생성된 음성 파일 저장 경로
 
@@ -153,43 +153,31 @@ def end_chat():
     data_to_send = {
         'user_id': session.get('user_id'),  # 세션에 저장된 사용자 ID
         # 'session_id': session.sid,
-        'overall_score': overall_assessment,
+        'score': overall_assessment,
         # 'chat_history': chat_history
-        'overall_analyze': analyze_chat
+        'summary': analyze_chat
     }
 
     print(chat_history)
 
     print(data_to_send)
 
-    # # 다른 서버로 데이터 전송
-    # response = requests.post(TARGET_SERVER_URL, json=data_to_send)
+    # 다른 서버로 데이터 전송
+    response = requests.post(TARGET_SERVER_URL, json=data_to_send)
 
-    # try:
-    #     server_response = response.json()  # JSON 응답 파싱 시도
-    # except requests.exceptions.JSONDecodeError:
-    #     server_response = response.text  # JSON 파싱 실패 시, 텍스트 응답 반환
-    #     print("response error")
+    try:
+        server_response = response.json()  # JSON 응답 파싱 시도
+    except requests.exceptions.JSONDecodeError:
+        server_response = response.text  # JSON 파싱 실패 시, 텍스트 응답 반환
+        print("response error")
 
     session.clear()  # 세션 데이터를 삭제하여 세션을 종료합니다.
-    # return jsonify({'response': '채팅이 종료되었습니다. 세션이 종료되었습니다.', 'server_response': response.json()})
     return jsonify({
         'response': '채팅이 종료되었습니다. 세션이 종료되었습니다.',
-        'overall_score': overall_assessment,
-        'overall_analyze': analyze_chat,
-        # 'server_response': response.json()
+        'score': overall_assessment,
+        'summary': analyze_chat,
+        'server_response': response.json()
     })
-
-
-# @app.route('/api/chatbot/analyze', methods=['POST'])
-# def analyze_depression_trend():
-#     """우울증 점수와 분석을 받아 요약된 분석을 생성"""
-#     data = request.json
-#     if 'text' not in data:
-#         return jsonify({'error': 'Text field is required'}), 400
-
-#     summary = summarize_depression_analysis(data['text'])
-#     return jsonify({'summary': summary})
 
 @app.route('/api/chatbot/analyze', methods=['POST'])
 def analyze_depression_trend():
