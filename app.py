@@ -18,6 +18,7 @@ app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(
     minutes=60)  # 세션 타임아웃 60분 설정
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 app.config['SESSION_COOKIE_SECURE'] = False  # HTTPS에서만 동작, 로컬 개발 시 False로 설정 가능
+app.config['SESSION_COOKIE_HTTPONLY'] = False # HttpOnly 속성을 False로 설정
 Session(app)
 
 TARGET_SERVER_URL = 'http://52.79.169.5:8080/api/v1/weather/score'  # 데이터를 전송할 대상 서버의 URL
@@ -42,9 +43,9 @@ def start_chat():
     session['phq9_scores'] = []
     session['completed_phq9'] = False
     session['chat_history'] = []  # 채팅 내역 초기화
-    # return jsonify({'message': '새로운 세션이 시작되었습니다.', 'user_id': session['user_id']})
-    response = make_response("새로운 세션이 시작되었습니다.")
-    response.set_cookie('user_id', session.get('user_id'), httponly=False)
+    return jsonify({'message': '새로운 세션이 시작되었습니다.', 'user_id': session['user_id']})
+    # response = make_response("새로운 세션이 시작되었습니다.")
+    # response.set_cookie('user_id', str(session.get('user_id')), httponly=False)
     return response
 
 
