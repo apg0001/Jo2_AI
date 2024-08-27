@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, session, send_file
+from flask import Flask, request, jsonify, session, send_file, make_response
 from flask_cors import CORS  # CORS 라이브러리 임포트
 from flask_session import Session
 from chatbot_service import get_chat_response, get_score_from_intent, ask_phq9_question, phq9_questions, evaluate_overall_depression, upload_and_predict, summarize_depression_analysis, analyze_overall_chat
@@ -15,7 +15,7 @@ CORS(app, supports_credentials=True)
 app.config['SECRET_KEY'] = 'supersecretkey'
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['PERMANENT_SESSION_LIFETIME'] = datetime.timedelta(
-    minutes=60)  # 세션 타임아웃 10분 설정
+    minutes=60)  # 세션 타임아웃 60분 설정
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 app.config['SESSION_COOKIE_SECURE'] = False  # HTTPS에서만 동작, 로컬 개발 시 False로 설정 가능
 Session(app)
@@ -42,7 +42,10 @@ def start_chat():
     session['phq9_scores'] = []
     session['completed_phq9'] = False
     session['chat_history'] = []  # 채팅 내역 초기화
-    return jsonify({'message': '새로운 세션이 시작되었습니다.', 'user_id': session['user_id']})
+    # return jsonify({'message': '새로운 세션이 시작되었습니다.', 'user_id': session['user_id']})
+    response = make_response("새로운 세션이 시작되었습니다.")
+    response.set_cookie('user_id', session.get('user_id'), httponly=False)
+    return response
 
 
 def process_chat_message(message):
