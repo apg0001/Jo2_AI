@@ -149,6 +149,8 @@ def voice_chat():
         "recognizedText": corrected_text,
         "response": result
     }
+    
+    print(response)
 
     return jsonify(response), status_code
 
