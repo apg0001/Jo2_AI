@@ -174,7 +174,10 @@ def end_chat():
     print(data_to_send)
 
     # 다른 서버로 데이터 전송
-    response = requests.post(TARGET_SERVER_URL, json=data_to_send)
+    try:
+        response = requests.post(TARGET_SERVER_URL, json=data_to_send)
+    except:
+        print("백서버 꺼진듯 ㅇㅅㅇ")
 
     try:
         server_response = response.json()  # JSON 응답 파싱 시도
