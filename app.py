@@ -176,13 +176,9 @@ def end_chat():
     # 다른 서버로 데이터 전송
     try:
         response = requests.post(TARGET_SERVER_URL, json=data_to_send)
-    except:
-        print("백서버 꺼진듯 ㅇㅅㅇ")
-
-    try:
         server_response = response.json()  # JSON 응답 파싱 시도
     except requests.exceptions.JSONDecodeError:
-        server_response = response.text  # JSON 파싱 실패 시, 텍스트 응답 반환
+        server_response = "백서버 연결 실패요 ㅅㄱ"  # JSON 파싱 실패 시, 텍스트 응답 반환
         print("response error")
 
     session.clear()  # 세션 데이터를 삭제하여 세션을 종료합니다.
@@ -190,7 +186,7 @@ def end_chat():
         'response': '채팅이 종료되었습니다. 세션이 종료되었습니다.',
         'score': overall_assessment,
         'summary': analyze_chat,
-        'server_response': response.json()
+        'server_response': server_response
     })
 
 @app.route('/api/chatbot/analyze', methods=['POST'])
