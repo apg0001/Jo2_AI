@@ -23,7 +23,7 @@ app.config['SESSION_COOKIE_SECURE'] = True  # HTTPS에서만 동작, 로컬 개�
 app.config['SESSION_COOKIE_HTTPONLY'] = False # HttpOnly 속성을 False로 설정
 Session(app)
 
-TARGET_SERVER_URL = 'http://52.79.169.5:8080/api/v1/weather/score'  # 데이터를 전송할 대상 서버의 URL
+TARGET_SERVER_URL = 'https://api.joyfully.o-r.kr/api/v1/weather/score'  # 데이터를 전송할 대상 서버의 URL
 WAVE_OUTPUT_FILENAME = "./audio/record.wav"  # 클라이언트로부터 받은 오디오 파일 저장 경로
 TTS_OUTPUT_FILENAME = "./audio/response.mp3"  # TTS로 생성된 음성 파일 저장 경로
 
