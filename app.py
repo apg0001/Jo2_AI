@@ -202,10 +202,10 @@ def end_chat():
     analyze_chat = analyze_overall_chat(chat_history)
 
     data_to_send = {
-        'user_id': session.get('user_id'),  # 세션에 저장된 사용자 ID
+        'userId': session.get('user_id'),  # 세션에 저장된 사용자 ID
         # 'session_id': session.sid,
-        'score': overall_assessment,
-        'phq9_score': session.get('phq9_score'),
+        'overallScore': overall_assessment,
+        'phq9Score': session.get('phq9_score'),
         # 'chat_history': chat_history
         'summary': analyze_chat
     }
