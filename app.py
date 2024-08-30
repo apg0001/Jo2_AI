@@ -61,7 +61,7 @@ def start_chat():
     session['phq9_scores'] = []
     session['completed_phq9'] = False
     session['chat_history'] = []  # 채팅 내역 초기화
-    return jsonify({'message': '새로운 세션이 시작되었습니다.', 'user_id': session['user_id']})
+    return jsonify({'message': '새로운 채팅이 시작되었습니다.\n설문을 시작합니다.', 'user_id': session['user_id']})
     # response = make_response("새로운 세션이 시작되었습니다. user_id: " + str(session['user_id']))
     # response.set_cookie('user_id', str(session.get('user_id')), httponly=False)
     # for header, value in response.headers.items():
