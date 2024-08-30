@@ -15,15 +15,15 @@ from models import ChatRequest, ChatResponse
 
 # PHQ-9 질문 목록
 phq9_questions = [
-    "최근에 기분이 가라앉거나 우울한 적이 있나요?",
-    "최근에 평소에 즐기던 일들에 흥미를 잃으셨나요?",
-    "최근에 잠들기 어렵거나 자주 깨셨나요?",
-    "최근에 평소보다 피곤하거나 기운이 없으셨나요?",
-    "최근에 식욕이 줄거나 폭식하는 경향이 있었나요?",
-    "최근에 자신에 대해 나쁘게 느끼셨나요?",
-    "최근에 집중하기 어려운 적이 있나요?",
-    "최근에 움직이거나 말하는 것이 느리다고 느끼셨나요?",
-    "최근에 죽고 싶다는 생각을 하신 적이 있나요?"
+    "[설문중입니다]최근에 기분이 가라앉거나 우울한 적이 있나요?",
+    "[설문중입니다]최근에 평소에 즐기던 일들에 흥미를 잃으셨나요?",
+    "[설문중입니다]최근에 잠들기 어렵거나 자주 깨셨나요?",
+    "[설문중입니다]최근에 평소보다 피곤하거나 기운이 없으셨나요?",
+    "[설문중입니다]최근에 식욕이 줄거나 폭식하는 경향이 있었나요?",
+    "[설문중입니다]최근에 자신에 대해 나쁘게 느끼셨나요?",
+    "[설문중입니다]최근에 집중하기 어려운 적이 있나요?",
+    "[설문중입니다]최근에 움직이거나 말하는 것이 느리다고 느끼셨나요?",
+    "[설문중입니다]최근에 죽고 싶다는 생각을 하신 적이 있나요?"
 ]
 
 def get_chat_response(chat_request: ChatRequest) -> ChatResponse:
@@ -225,6 +225,7 @@ def upload_and_predict(filepath):
     corrected_text = prediction
 
     # 교정된 텍스트를 OpenAI API로 전송
-    chat_response = send_to_openai_chat(corrected_text)
+    # chat_response = send_to_openai_chat(corrected_text)
 
-    return chat_response
+    # return chat_response
+    return corrected_text
