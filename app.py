@@ -136,6 +136,11 @@ def voice_chat():
     """클라이언트로부터 음성 파일을 받아 처리하고 OpenAI API로 전송 후, 응답을 음성 파일로 반환"""
     if 'file' not in request.files:
         return jsonify({'error': 'Audio file is required'}), 400
+    
+    # 테스트
+    print(request.headers)
+    data = request.json
+    print(data)
 
     # # 음성 파일 저장
     # audio_file = request.files['file']
