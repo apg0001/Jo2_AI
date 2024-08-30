@@ -61,7 +61,7 @@ def start_chat():
     session['phq9_scores'] = []
     session['completed_phq9'] = False
     session['chat_history'] = []  # 채팅 내역 초기화
-    return jsonify({'message': '새로운 채팅이 시작되었습니다.\n설문을 시작합니다.<br>설문에 성실하게 답해라 닝겐', 'user_id': session['user_id']})
+    return jsonify({'message': '새로운 채팅이 시작되었습니다.\n설문을 시작합니다.\n설문에 답해주세요.', 'user_id': session['user_id']})
     # response = make_response("새로운 세션이 시작되었습니다. user_id: " + str(session['user_id']))
     # response.set_cookie('user_id', str(session.get('user_id')), httponly=False)
     # for header, value in response.headers.items():
@@ -107,6 +107,7 @@ def process_chat_message(message):
                 'total_score': total_score,
                 'assessment': assess_depression(total_score)
             }
+            session['phq9_score'] = total_score
             session['chat_history'].append(
                 {'role': 'assistant', 'content': result['response']})  # 채팅 내역에 추가
             return result, 200
@@ -122,7 +123,7 @@ def process_chat_message(message):
 @app.route('/api/chatbot/chat', methods=['POST'])
 def chat():
     # print(request.headers)
-    # data = request.json
+    data = request.json
     # print(data)
     if 'message' not in data:
         return jsonify({'error': 'Message field is required'}), 400
@@ -204,6 +205,7 @@ def end_chat():
         'user_id': session.get('user_id'),  # 세션에 저장된 사용자 ID
         # 'session_id': session.sid,
         'score': overall_assessment,
+        'phq9_score': session.get('phq9_score'),
         # 'chat_history': chat_history
         'summary': analyze_chat
     }
