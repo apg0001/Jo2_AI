@@ -139,7 +139,7 @@ def voice_chat():
     
     # 테스트
     print(request.headers)
-    data = request.json
+    data = request.files
     print(data)
 
     # # 음성 파일 저장
@@ -151,13 +151,13 @@ def voice_chat():
     audio_file.save(WAVE_OUTPUT_FILENAME)
     
     # 파일이 이미 WAV 포맷인지 확인
-    if is_wav_format(WAVE_OUTPUT_FILENAME):
-        print("파일이 이미 WAV 포맷입니다. 변환하지 않습니다.")
-        # output_file = input_file  # 변환하지 않고 기존 파일을 그대로 사용
-    else:
-        # 파일을 WAV로 변환
-        print("파일이 WAV 포맷이 아닙니다. 파일을 변환합니다.")
-        convert_to_wav(WAVE_OUTPUT_FILENAME, WAVE_OUTPUT_FILENAME)
+    # if is_wav_format(WAVE_OUTPUT_FILENAME):
+    #     print("파일이 이미 WAV 포맷입니다. 변환하지 않습니다.")
+    #     # output_file = input_file  # 변환하지 않고 기존 파일을 그대로 사용
+    # else:
+    #     # 파일을 WAV로 변환
+    #     print("파일이 WAV 포맷이 아닙니다. 파일을 변환합니다.")
+    #     convert_to_wav(WAVE_OUTPUT_FILENAME, WAVE_OUTPUT_FILENAME)
 
     # 변환된 (혹은 기존의) 파일을 사용하는 코드 작성
     try:
