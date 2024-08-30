@@ -61,7 +61,7 @@ def start_chat():
     session['phq9_scores'] = []
     session['completed_phq9'] = False
     session['chat_history'] = []  # 채팅 내역 초기화
-    return jsonify({'message': '새로운 채팅이 시작되었습니다.\n설문을 시작합니다.', 'user_id': session['user_id']})
+    return jsonify({'message': '새로운 채팅이 시작되었습니다.\n설문을 시작합니다.<br>설문에 성실하게 답해라 닝겐', 'user_id': session['user_id']})
     # response = make_response("새로운 세션이 시작되었습니다. user_id: " + str(session['user_id']))
     # response.set_cookie('user_id', str(session.get('user_id')), httponly=False)
     # for header, value in response.headers.items():
@@ -121,9 +121,9 @@ def process_chat_message(message):
 
 @app.route('/api/chatbot/chat', methods=['POST'])
 def chat():
-    print(request.headers)
-    data = request.json
-    print(data)
+    # print(request.headers)
+    # data = request.json
+    # print(data)
     if 'message' not in data:
         return jsonify({'error': 'Message field is required'}), 400
 
@@ -138,9 +138,9 @@ def voice_chat():
         return jsonify({'error': 'Audio file is required'}), 400
     
     # 테스트
-    print(request.headers)
-    data = request.files
-    print(data)
+    # print(request.headers)
+    # data = request.files
+    # print(data)
 
     # # 음성 파일 저장
     # audio_file = request.files['file']
