@@ -49,10 +49,6 @@ def convert_to_wav(input_file, output_file):
     except Exception as e:
         print(f"파일 변환 중 오류 발생: {e}")
 
-input_file = 'audio/record.wav'
-# output_file = 'audio/record_converted.wav'
-output_file = 'audio/record.wav'
-
 @app.route('/api/chatbot/start', methods=['POST'])
 def start_chat():
     data = request.json
@@ -138,8 +134,8 @@ def chat():
 @app.route('/api/chatbot/voice', methods=['POST'])
 def voice_chat():
     """클라이언트로부터 음성 파일을 받아 처리하고 OpenAI API로 전송 후, 응답을 음성 파일로 반환"""
-    # if 'file' not in request.files:
-    #     return jsonify({'error': 'Audio file is required'}), 400
+    if 'file' not in request.files:
+        return jsonify({'error': 'Audio file is required'}), 400
 
     # # 음성 파일 저장
     # audio_file = request.files['file']
@@ -150,16 +146,17 @@ def voice_chat():
     audio_file.save(WAVE_OUTPUT_FILENAME)
     
     # 파일이 이미 WAV 포맷인지 확인
-    if is_wav_format(input_file):
+    if is_wav_format(WAVE_OUTPUT_FILENAME):
         print("파일이 이미 WAV 포맷입니다. 변환하지 않습니다.")
-        output_file = input_file  # 변환하지 않고 기존 파일을 그대로 사용
+        # output_file = input_file  # 변환하지 않고 기존 파일을 그대로 사용
     else:
         # 파일을 WAV로 변환
-        convert_to_wav(input_file, output_file)
+        print("파일이 WAV 포맷이 아닙니다. 파일을 변환합니다.")
+        convert_to_wav(WAVE_OUTPUT_FILENAME, WAVE_OUTPUT_FILENAME)
 
     # 변환된 (혹은 기존의) 파일을 사용하는 코드 작성
     try:
-        data, samplerate = sf.read(output_file)
+        data, samplerate = sf.read(WAVE_OUTPUT_FILENAME)
         print("파일을 성공적으로 읽었습니다!")
         # 여기서 data와 samplerate를 사용하여 추가 작업을 수행할 수 있습니다.
     except Exception as e:
@@ -167,6 +164,7 @@ def voice_chat():
 
     # 음성 인식 및 텍스트 추론 수행
     corrected_text = upload_and_predict(WAVE_OUTPUT_FILENAME)
+    # corrected_text = upload_and_predict(WAVE_OUTPUT_FILENAME)
 
     result, status_code = process_chat_message(corrected_text)
 
