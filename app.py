@@ -7,6 +7,8 @@ import os
 import datetime
 import requests
 import pyttsx3
+import ffmpeg
+import soundfile as sf
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -32,6 +34,24 @@ TTS_OUTPUT_FILENAME = "./audio/response.mp3"  # TTS로 생성된 음성 파일 �
 def make_session_permanent():
     session.permanent = True
 
+def is_wav_format(file_path):
+    try:
+        with sf.SoundFile(file_path) as file:
+            return file.format == 'WAV'
+    except Exception as e:
+        print(f"파일 형식을 확인하는 중 오류 발생: {e}")
+        return False
+
+def convert_to_wav(input_file, output_file):
+    try:
+        ffmpeg.input(input_file).output(output_file, acodec='pcm_s16le', ar='44100').run()
+        print(f"파일이 {output_file}로 변환되었습니다.")
+    except Exception as e:
+        print(f"파일 변환 중 오류 발생: {e}")
+
+input_file = 'audio/record.wav'
+# output_file = 'audio/record_converted.wav'
+output_file = 'audio/record.wav'
 
 @app.route('/api/chatbot/start', methods=['POST'])
 def start_chat():
@@ -128,6 +148,22 @@ def voice_chat():
     audio_file = request.files["audio"]
     # audio_path = os.path.join("audio", "input.wav")
     audio_file.save(WAVE_OUTPUT_FILENAME)
+    
+    # 파일이 이미 WAV 포맷인지 확인
+    if is_wav_format(input_file):
+        print("파일이 이미 WAV 포맷입니다. 변환하지 않습니다.")
+        output_file = input_file  # 변환하지 않고 기존 파일을 그대로 사용
+    else:
+        # 파일을 WAV로 변환
+        convert_to_wav(input_file, output_file)
+
+    # 변환된 (혹은 기존의) 파일을 사용하는 코드 작성
+    try:
+        data, samplerate = sf.read(output_file)
+        print("파일을 성공적으로 읽었습니다!")
+        # 여기서 data와 samplerate를 사용하여 추가 작업을 수행할 수 있습니다.
+    except Exception as e:
+        print(f"파일을 읽는 중 오류 발생: {e}")
 
     # 음성 인식 및 텍스트 추론 수행
     corrected_text = upload_and_predict(WAVE_OUTPUT_FILENAME)
