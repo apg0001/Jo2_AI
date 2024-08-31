@@ -499,8 +499,11 @@ import soundfile as sf
 import jwt
 
 # 환경변수에서 JWT 시크릿 키를 가져옴
-JWT_SECRET = os.getenv('JWT_SECRET', 'your_jwt_secret')
-JWT_ALGORITHM = 'HMAC'
+JWT_SECRET = os.getenv('JWT_SECRET', "")
+# print(JWT_SECRET)
+# JWT_SECRET = ""
+# JWT_SECRET = ""
+JWT_ALGORITHM = 'HS512'
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
@@ -516,10 +519,11 @@ def decode_jwt_token(token):
     """JWT 토큰 디코딩 및 검증"""
     try:
         print(token)
-        payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        payload = jwt.decode(jwt=token, jey=JWT_SECRET, algorithms=JWT_ALGORITHM)
         print(payload)
         return payload['userId']
-    except (jwt.ExpiredSignatureError, jwt.InvalidTokenError):
+    except (jwt.ExpiredSignatureError, jwt.InvalidTokenError) as e:
+        print(e)
         return None
 
 def get_user_session(user_id):
