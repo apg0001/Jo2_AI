@@ -320,7 +320,7 @@ def start_chat():
 
     user_id = decode_jwt_token(request.headers['Authorization'])
     if not user_id:
-        return jsonify({'error': 'Invalid or expired token'}), 403
+        return jsonify({'error': 'Invalid or expired token'}), 401
 
     # 사용자 세션 초기화
     user_sessions[user_id] = {
