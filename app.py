@@ -709,4 +709,10 @@ def assess_depression(total_score: int) -> str:
         return "경미한 우울증이 의심됩니다."
     elif total_score < 15:
         return "중간 정도의 우울증이 의심됩니다."
-    elif total_score < 20:
+    elif total_score < 20:        
+        return "치료를 요하는 정도의 우울증이 의심됩니다."
+    else:
+        return "심한 우울증이 의심됩니다."
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
