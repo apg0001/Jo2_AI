@@ -606,7 +606,8 @@ def process_chat_message(token, message):
         chat_request = ChatRequest(message=message)
         chat_response = get_chat_response(chat_request)
         session['chat_history'].append({'role': 'assistant', 'content': chat_response.response})  # 챗봇 응답 추가
-        return {'response': chat_response.to_dict()}, 200
+        # return {'response': chat_response.to_dict()}, 200
+        return {'response': chat_response.response}, 200
 
 @app.route('/api/chatbot/chat', methods=['POST'])
 def chat():
