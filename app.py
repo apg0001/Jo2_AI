@@ -500,7 +500,7 @@ import jwt
 
 # 환경변수에서 JWT 시크릿 키를 가져옴
 JWT_SECRET = os.getenv('JWT_SECRET', "")
-print(JWT_SECRET)
+# print(JWT_SECRET)
 # JWT_SECRET = ""
 # JWT_SECRET = ""
 JWT_ALGORITHM = 'HS512'
@@ -518,9 +518,9 @@ TTS_OUTPUT_FILENAME = "./audio/response.mp3"  # TTS로 생성된 음성 파일 �
 def decode_jwt_token(token):
     """JWT 토큰 디코딩 및 검증"""
     try:
-        print(token)
+        # print(token)
         payload = jwt.decode(jwt=token, jey=JWT_SECRET, algorithms=JWT_ALGORITHM, options={"verify_signature": False})
-        print(payload)
+        # print(payload)
         return payload['memberId']
     except (jwt.ExpiredSignatureError, jwt.InvalidTokenError) as e:
         print(e)
@@ -547,7 +547,7 @@ def get_token_from_header():
 
 @app.route('/api/chatbot/start', methods=['POST'])
 def start_chat():
-    print(request.headers)
+    # print(request.headers)
     token = get_token_from_header()
     if not token:
         return jsonify({'error': 'Authorization token is required'}), 400
@@ -672,13 +672,16 @@ def end_chat():
         'phq9Score': session.get('phq9_score'),
         'summary': analyze_chat
     }
-
-    try:
-        response = requests.post(TARGET_SERVER_URL, json=data_to_send)
-        server_response = response.json()
-    except requests.exceptions.JSONDecodeError:
-        server_response = "백서버 연결 실패요 ㅅㄱ"
-        print("response error")
+    if session['phq9_index'] >= len(phq9_questions):
+        try:
+            response = requests.post(TARGET_SERVER_URL, json=data_to_send)
+            server_response = response.json()
+            print("back server response 200")
+        except requests.exceptions.JSONDecodeError:
+            server_response = "백서버 연결 실패요 ㅅㄱ"
+            print("back server response error")
+    else:
+        server_response = "선생님 얘 설문 다 안하고 도망갔어요."
 
     # 세션 종료 시 사용자 세션 데이터 삭제
     del user_sessions[user_id]

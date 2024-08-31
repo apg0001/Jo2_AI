@@ -42,7 +42,7 @@ def get_score_from_intent(answer: str) -> int:
     response = client.chat.completions.create(model="gpt-3.5-turbo",
     messages=[
         {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": f"다음 문장이 부정(전혀 아님, 0점) ~ 긍정(매우 맞음, 3점) 중 몇 점에 속하는지 0~3으로 숫자로만 대답해 : '{answer}'"}
+        {"role": "user", "content": f"다음 문장이 부정 또는 긍정(아님:0점, 보통: 1점, 맞음: 2점, 매우 맞음: 3점) 중 몇 점에 속하는지 0~3으로 숫자로만 대답해 : '{answer}'"}
     ],
     max_tokens=10,
     temperature=0)
