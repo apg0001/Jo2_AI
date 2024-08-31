@@ -313,6 +313,7 @@ def get_user_session(user_id):
 
 @app.route('/api/chatbot/start', methods=['POST'])
 def start_chat():
+    print(request.headers)
     data = request.json
     if 'Authorization' not in request.headers:
         return jsonify({'error': 'Token is required'}), 400
