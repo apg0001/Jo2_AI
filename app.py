@@ -547,7 +547,7 @@ def start_chat():
 
     user_id = decode_jwt_token(token)
     if not user_id:
-        return jsonify({'error': 'Invalid or expired token'}), 403
+        return jsonify({'error': 'Invalid or expired token'}), 401
 
     # 사용자 세션 초기화
     user_sessions[user_id] = {
@@ -649,7 +649,7 @@ def end_chat():
     
     user_id = decode_jwt_token(token)
     if not user_id:
-        return jsonify({'error': '세션이 만료되었거나 유효하지 않습니다. 새로운 세션을 시작하세요.'}), 403
+        return jsonify({'error': '세션이 만료되었거나 유효하지 않습니다. 새로운 세션을 시작하세요.'}), 401
 
     session = user_sessions.get(user_id, None)
     if not session:
