@@ -318,7 +318,7 @@ def start_chat():
     if 'Authorization' not in request.headers:
         return jsonify({'error': 'Token is required'}), 400
 
-    user_id = decode_jwt_token(data['token'])
+    user_id = decode_jwt_token(request.headers['Authorization'])
     if not user_id:
         return jsonify({'error': 'Invalid or expired token'}), 403
 
@@ -416,7 +416,7 @@ def end_chat():
     if 'Authorization' not in request.headers:
         return jsonify({'error': 'Token is required'}), 401
     
-    user_id = decode_jwt_token(data['token'])
+    user_id = decode_jwt_token(request.headers['Authorization'])
     if not user_id:
         return jsonify({'error': '세션이 만료되었거나 유효하지 않습니다. 새로운 세션을 시작하세요.'}), 401
 
