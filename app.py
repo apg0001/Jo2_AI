@@ -122,9 +122,9 @@ def process_chat_message(message):
 
 @app.route('/api/chatbot/chat', methods=['POST'])
 def chat():
-    # print(request.headers)
+    print(request.headers)
     data = request.json
-    # print(data)
+    print(data)
     if 'message' not in data:
         return jsonify({'error': 'Message field is required'}), 400
 
