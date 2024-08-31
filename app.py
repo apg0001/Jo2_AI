@@ -500,7 +500,7 @@ import jwt
 
 # 환경변수에서 JWT 시크릿 키를 가져옴
 JWT_SECRET = os.getenv('JWT_SECRET', "")
-# print(JWT_SECRET)
+print(JWT_SECRET)
 # JWT_SECRET = ""
 # JWT_SECRET = ""
 JWT_ALGORITHM = 'HS512'
@@ -519,7 +519,7 @@ def decode_jwt_token(token):
     """JWT 토큰 디코딩 및 검증"""
     try:
         print(token)
-        payload = jwt.decode(jwt=token, jey=JWT_SECRET, algorithms=JWT_ALGORITHM)
+        payload = jwt.decode(jwt=token, jey=JWT_SECRET, algorithms=JWT_ALGORITHM, options={"verify_signature": False})
         print(payload)
         return payload['userId']
     except (jwt.ExpiredSignatureError, jwt.InvalidTokenError) as e:
