@@ -515,6 +515,7 @@ TTS_OUTPUT_FILENAME = "./audio/response.mp3"  # TTS로 생성된 음성 파일 �
 def decode_jwt_token(token):
     """JWT 토큰 디코딩 및 검증"""
     try:
+        print(token)
         payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
         print(payload)
         return payload['userId']
