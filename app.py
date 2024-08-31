@@ -497,12 +497,10 @@ import pyttsx3
 import ffmpeg
 import soundfile as sf
 import jwt
+import re
 
 # 환경변수에서 JWT 시크릿 키를 가져옴
 JWT_SECRET = os.getenv('JWT_SECRET', "")
-# print(JWT_SECRET)
-# JWT_SECRET = ""
-# JWT_SECRET = ""
 JWT_ALGORITHM = 'HS512'
 
 app = Flask(__name__)
@@ -514,6 +512,13 @@ user_sessions = {}
 TARGET_SERVER_URL = 'https://api.joyfully.o-r.kr/api/v1/weather/score'  # 데이터를 전송할 대상 서버의 URL
 WAVE_OUTPUT_FILENAME = "./audio/record.wav"  # 클라이언트로부터 받은 오디오 파일 저장 경로
 TTS_OUTPUT_FILENAME = "./audio/response.mp3"  # TTS로 생성된 음성 파일 저장 경로
+
+def remove_tags(html_content):
+    # HTML, HEAD, BODY 태그를 제거하는 정규 표현식
+    html_content = re.sub(r'</?(html|head|body)>', '', html_content, flags=re.IGNORECASE)
+    # 개행 문자 제거
+    html_content = html_content.replace('\n', '')
+    return html_content
 
 def decode_jwt_token(token):
     """JWT 토큰 디코딩 및 검증"""
@@ -700,19 +705,20 @@ def analyze_depression_trend():
     data = request.json
     print(data)
 
-    if 'weatherList' not in data or not isinstance(data['weatherList'], list):
-        return jsonify({'error': 'weatherList must be a list of weather data'}), 400
+    if 'weather_lst' not in data or not isinstance(data['weather_list'], list):
+        return jsonify({'error': 'weather_list must be a list of weather data'}), 400
 
-    weather_list = data['weatherList']
+    weather_list = data['weather_list']
 
     parsed_string = ', '.join(
-        f"날짜 : {item['createdAt']}/요일 : {item['dayofweek']}/채팅 내용 분석 : {item['result']}/채팅 점수 : {item['score']}/phq설문 점수 : { item['phq9Score']}"
+        f"날짜 : {item['date']}/채팅 내용 분석 : {item['result']}/채팅 점수 : {item['score']}/phq설문 점수 : { item['phq_score']}"
         for item in weather_list
     )
 
     summary = summarize_depression_analysis(parsed_string)
+    summary_remove_tag = remove_tags(summary)
 
-    return jsonify({'summary': summary})
+    return jsonify({'summary': summary_remove_tag})
 
 def assess_depression(total_score: int) -> str:
     if total_score < 5:
