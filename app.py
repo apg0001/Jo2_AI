@@ -516,6 +516,7 @@ def decode_jwt_token(token):
     """JWT 토큰 디코딩 및 검증"""
     try:
         payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
+        print(payload)
         return payload['userId']
     except (jwt.ExpiredSignatureError, jwt.InvalidTokenError):
         return None
@@ -541,6 +542,7 @@ def get_token_from_header():
 
 @app.route('/api/chatbot/start', methods=['POST'])
 def start_chat():
+    print(request.headers)
     token = get_token_from_header()
     if not token:
         return jsonify({'error': 'Authorization token is required'}), 400
