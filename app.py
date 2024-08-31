@@ -673,7 +673,7 @@ def end_chat():
         'phq9Score': session.get('phq9_score'),
         'summary': analyze_chat
     }
-    if session['phq9_index'] >= len(phq9_questions):
+    if session['completed_phq9']:
         try:
             response = requests.post(TARGET_SERVER_URL, json=data_to_send)
             server_response = response.json()
@@ -698,6 +698,7 @@ def end_chat():
 def analyze_depression_trend():
     """우울증 점수와 분석을 받아 요약된 분석을 생성"""
     data = request.json
+    print(data)
 
     if 'weatherList' not in data or not isinstance(data['weatherList'], list):
         return jsonify({'error': 'weatherList must be a list of weather data'}), 400
