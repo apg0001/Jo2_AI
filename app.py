@@ -295,7 +295,7 @@ def decode_jwt_token(token):
     """JWT 토큰 디코딩 및 검증"""
     try:
         payload = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
-        return payload['userId']
+        return payload['MEMBER_ID']
     except (jwt.ExpiredSignatureError, jwt.InvalidTokenError):
         return None
 
@@ -314,7 +314,7 @@ def get_user_session(user_id):
 @app.route('/api/chatbot/start', methods=['POST'])
 def start_chat():
     data = request.json
-    if 'token' not in data:
+    if 'Authorization' not in request.headers:
         return jsonify({'error': 'Token is required'}), 400
 
     user_id = decode_jwt_token(data['token'])
@@ -336,7 +336,7 @@ def process_chat_message(token, message):
     """메시지(텍스트 또는 음성 변환 텍스트)를 처리하는 함수"""
     user_id = decode_jwt_token(token)
     if not user_id:
-        return {'error': '세션이 만료되었거나 유효하지 않습니다. 새로운 세션을 시작하세요.'}, 403
+        return {'error': '토큰이 만료되었거나 유효하지 않습니다. 새로운 토큰을 시작하세요.'}, 401
 
     # 사용자 세션 가져오기
     session = get_user_session(user_id)
@@ -376,8 +376,11 @@ def process_chat_message(token, message):
 @app.route('/api/chatbot/chat', methods=['POST'])
 def chat():
     data = request.json
-    if 'message' not in data or 'token' not in data:
-        return jsonify({'error': 'Message and token fields are required'}), 400
+    if 'message' not in data:
+        return jsonify({'error': 'Messagefields are required'}), 400
+    if 'Authorization' not in request.headers:
+        return jsonify({'error': 'Token fields are required'}), 400
+        
 
     result, status_code = process_chat_message(data['token'], data['message'])
     return jsonify(result), status_code
@@ -388,7 +391,7 @@ def voice_chat():
     if 'audio' not in request.files or 'token' not in request.form:
         return jsonify({'error': 'Audio file and token are required'}), 400
     
-    token = request.form['token']
+    token = request.headers['Authorization']
     user_id = decode_jwt_token(token)
     if not user_id:
         return jsonify({'error': '세션이 만료되었거나 유효하지 않습니다. 새로운 세션을 시작하세요.'}), 403
@@ -409,16 +412,16 @@ def voice_chat():
 @app.route('/api/chatbot/end', methods=['POST'])
 def end_chat():
     data = request.json
-    if 'token' not in data:
-        return jsonify({'error': 'Token is required'}), 400
+    if 'Authorization' not in request.headers:
+        return jsonify({'error': 'Token is required'}), 401
     
     user_id = decode_jwt_token(data['token'])
     if not user_id:
-        return jsonify({'error': '세션이 만료되었거나 유효하지 않습니다. 새로운 세션을 시작하세요.'}), 403
+        return jsonify({'error': '세션이 만료되었거나 유효하지 않습니다. 새로운 세션을 시작하세요.'}), 401
 
     session = user_sessions.get(user_id, None)
     if not session:
-        return jsonify({'error': '세션을 찾을 수 없습니다. 새로운 세션을 시작하세요.'}), 403
+        return jsonify({'error': '세션을 찾을 수 없습니다. 새로운 세션을 시작하세요.'}), 401
 
     chat_history = session['chat_history']
     overall_assessment = evaluate_overall_depression(chat_history)
