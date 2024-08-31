@@ -500,7 +500,7 @@ import jwt
 
 # 환경변수에서 JWT 시크릿 키를 가져옴
 JWT_SECRET = os.getenv('JWT_SECRET', 'your_jwt_secret')
-JWT_ALGORITHM = 'HS256'
+JWT_ALGORITHM = 'HMAC'
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
