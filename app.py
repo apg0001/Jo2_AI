@@ -521,7 +521,7 @@ def decode_jwt_token(token):
         print(token)
         payload = jwt.decode(jwt=token, jey=JWT_SECRET, algorithms=JWT_ALGORITHM, options={"verify_signature": False})
         print(payload)
-        return payload['userId']
+        return payload['memberId']
     except (jwt.ExpiredSignatureError, jwt.InvalidTokenError) as e:
         print(e)
         return None
