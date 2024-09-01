@@ -36,6 +36,7 @@
    ```
 
 3. 환경 변수 설정
+
    - .env 파일을 생성하여 OpenAI API 키를 설정하세요:
 
    ```makefile
@@ -43,6 +44,7 @@
    ```
 
 🛠 사용 방법
+
 - 서버 실행
 - 서버를 실행하려면 다음 명령어를 사용하세요:
 
@@ -59,11 +61,11 @@ python app.py
    - URL: /api/chatbot/start
    - Method: POST
    - 설명: 새로운 상담 세션을 시작합니다.
-   - Request Body:
+   - Request Header:
 
    ```json
    {
-     "user_id": "int"
+     "Authorization": "Bearer ${token}"
    }
    ```
 
@@ -115,10 +117,12 @@ python app.py
    }
    ```
 4. 채팅 종료 (End Chat)
+
    - URL: /api/chatbot/end
    - Method: POST
    - 설명: 현재 상담 세션을 종료하고, 대화 내역을 분석하여 외부 서버로 전송합니다.
    - Response:
+
    ```json
    {
      "response": "채팅이 종료되었습니다. 세션이 종료되었습니다.",
@@ -127,47 +131,47 @@ python app.py
      "server_response": "status_code" "#서버로부터 받은 상태코드"
    }
    ```
-   
+
    - backend 서버로 보내는 Request
-  
+
    ```json
    {
-      "user_id": "String",
-      "score": 35,
-      "summary": "String"
+     "userId": "String",
+     "overallScore": "int",
+     "summary": "String",
+     "phq9Score": "int"
    }
    ```
+
    - backend 서버로부터 받는 Response
+
    ```json
    {
-      "message": "채팅 요약과 점수 저장 완료"
+     "message": "채팅 요약과 점수 저장 완료"
    }
-   ```   
-6. 우울증 분석 요약 (Analyze Depression Trend)
+   ```
+
+5. 우울증 분석 요약 (Analyze Depression Trend)
    - URL: /api/chatbot/analyze
    - Method: POST
    - 설명: 클라이언트로부터 제공된 우울증 점수 및 분석 텍스트를 요약합니다.
    - Request Body:
    ```json
    {
-       "weatherList": [
-           {
-               "id": "int",
-               "result": "String",
-               "score": "int",
-               "dayofweek": "String",
-               "createdAt": "LocalDateTime",
-               "updateAt": "LocalDateTime"
-           },
-           {
-               "id": "int",
-               "result": "String",
-               "score": "int",
-               "dayofweek": "String",
-               "createdAt": "LocalDateTime",
-               "updateAt": "LocalDateTime"
-           },
-       ]
+     "weather_list": [
+       {
+         "result": "string",
+         "score": "int",
+         "phq_score": "int",
+         "date": "localdatetime"
+       },
+       {
+         "result": "string",
+         "score": "int",
+         "phq_score": "int",
+         "date": "localdatetime"
+       }
+     ]
    }
    ```
    - Response:
