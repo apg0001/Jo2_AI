@@ -1,7 +1,5 @@
 from openai import OpenAI
 import os
-
-client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 import librosa
 import torch
 import numpy as np
@@ -12,6 +10,7 @@ from transformers import pipeline, AutoModelForSeq2SeqLM, AutoTokenizer
 from models import ChatRequest, ChatResponse
 
 # OpenAI API 키 설정
+client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
 # PHQ-9 질문 목록
 phq9_questions = [
@@ -96,9 +95,6 @@ def summarize_depression_analysis(text: str) -> str:
         max_tokens=500,
         temperature=0.5
     )
-
-    # summary = response.choices[0].message['content'].strip()
-    # 이전에는 response.choices[0].message['content'].strip()로 접근했으나, 최신 방식으로 수정
     summary = response.choices[0].message.content.strip()
     print(summary)
     md_summary = summary.replace("\n", "  ")
@@ -202,16 +198,16 @@ def correct_text(text, device):
 
     return corrected_text[0]['generated_text']
 
-def send_to_openai_chat(text):
-    """OpenAI API에 텍스트를 보내고 응답을 받음"""
-    response = client.chat.completions.create(model="gpt-3.5-turbo",
-    messages=[
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": text}
-    ])
-    chat_response = response.choices[0].message.content.strip()
-    print("ChatGPT Response:", chat_response)
-    return chat_response
+# def send_to_openai_chat(text):
+#     """OpenAI API에 텍스트를 보내고 응답을 받음"""
+#     response = client.chat.completions.create(model="gpt-3.5-turbo",
+#     messages=[
+#         {"role": "system", "content": "You are a helpful assistant."},
+#         {"role": "user", "content": text}
+#     ])
+#     chat_response = response.choices[0].message.content.strip()
+#     print("ChatGPT Response:", chat_response)
+#     return chat_response
 
 def upload_and_predict(filepath):
     """오디오 파일을 업로드하고 모델을 사용해 추론 후 교정 및 OpenAI API로 전송"""

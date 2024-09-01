@@ -1,13 +1,9 @@
-from flask import Flask, request, jsonify, send_file
+from flask import Flask, request, jsonify
 from flask_cors import CORS  # CORS 라이브러리 임포트
 from chatbot_service import get_chat_response, get_score_from_intent, ask_phq9_question, phq9_questions, evaluate_overall_depression, upload_and_predict, summarize_depression_analysis, analyze_overall_chat
-from models import ChatRequest, ChatResponse
+from models import ChatRequest
 import os
-import datetime
 import requests
-import pyttsx3
-import ffmpeg
-import soundfile as sf
 import jwt
 import re
 
