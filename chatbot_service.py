@@ -64,14 +64,14 @@ def ask_phq9_question(question_index: int) -> str:
 def evaluate_overall_depression(chat_history) -> dict:
     response = client.chat.completions.create(model="gpt-3.5-turbo",
     messages=[
-        {"role": "system", "content": "다음 채팅 내역을 통해 전반적인 사용자의 우울 정도를 0부터 100까지의 숫자로만 대답해줘. (0:매우 정상, 10:매우 우울함) 숫자만 대답해.:\n"},
+        {"role": "system", "content": "다음 채팅 내역을 통해 전반적인 사용자의 우울 정도를 0부터 100까지의 숫자로만 대답해줘. (0:매우 정상, 10:매우 우울함) 다른 말 없이 반드시 숫자만 대답해.:\n"},
         {"role": "user", "content": "\n".join([f"{msg['role']}: {msg['content']}" for msg in chat_history])}
     ],
     max_tokens=10,
     temperature=0.5)
 
     overall_assessment = response.choices[0].message.content.strip()
-    return overall_assessment
+    return int(overall_assessment)
 
 def analyze_overall_chat(chat_history) -> dict:
     response = client.chat.completions.create(model="gpt-3.5-turbo",
