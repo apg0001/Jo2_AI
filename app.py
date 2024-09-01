@@ -609,7 +609,7 @@ def process_chat_message(token, message):
             return result, 200
     else:
         chat_request = ChatRequest(message=message)
-        chat_response = get_chat_response(chat_request)
+        chat_response = get_chat_response(session['chat_history'], chat_request)
         session['chat_history'].append({'role': 'assistant', 'content': chat_response.response})  # 챗봇 응답 추가
         # return {'response': chat_response.to_dict()}, 200
         return {'response': chat_response.response}, 200
@@ -688,6 +688,7 @@ def end_chat():
             print("back server response error")
     else:
         server_response = "선생님 얘 설문 다 안하고 도망갔어요."
+        print(server_response)
 
     # 세션 종료 시 사용자 세션 데이터 삭제
     del user_sessions[user_id]
