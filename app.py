@@ -248,4 +248,4 @@ def assess_depression(total_score: int) -> str:
         return "심한 우울증이 의심됩니다."
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000)
