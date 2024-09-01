@@ -32,9 +32,8 @@ def remove_tags(html_content):
 def decode_jwt_token(token):
     """JWT 토큰 디코딩 및 검증"""
     try:
-        # print(token)
-        payload = jwt.decode(jwt=token, jey=JWT_SECRET, algorithms=JWT_ALGORITHM, options={"verify_signature": False})
-        # print(payload)
+        # payload = jwt.decode(jwt=token, jey=JWT_SECRET, algorithms=JWT_ALGORITHM, options={"verify_signature": False})
+        payload = jwt.decode(jwt=token, jey=JWT_SECRET, algorithms=JWT_ALGORITHM)
         return payload['memberId']
     except (jwt.ExpiredSignatureError, jwt.InvalidTokenError) as e:
         print(e)
