@@ -29,8 +29,7 @@ phq9_questions = [
 def get_chat_response(chat_history, chat_request: ChatRequest) -> ChatResponse:
     response = client.chat.completions.create(model="gpt-3.5-turbo",
     messages=[
-        {"role": "system", "content": "너는 사용자와 일상 대화(식사, 운동 등의 여러 주제에 대해서도 대화 가능),그리고 우울증 예방 및 치료를 해주는 챗봇이 될 거야. 만약 사용자가 주제와 크게 벗어나는, 우리의 의도와 맞지 않은 얘기를 하면 그 부분에 대해서는 대답할 수 없다고 완곡히 거절해 주면 돼."},
-        {"role": "user", "content": "\n".join([f"{msg['role']}: {msg['content']}" for msg in chat_history])},
+        {"role": "system", "content": "너는 사용자와 일상 대화(식사, 운동 등의 여러 주제에 대해서도 대화 가능),그리고 우울증 예방 및 치료를 해주는 챗봇이 될 거야. 만약 사용자가 주제와 크게 벗어나는, 우리의 의도와 맞지 않은 얘기를 하면 그 부분에 대해서는 대답할 수 없다고 완곡히 거절해 주면 돼., 다음 대화 내역을 기반으로 이전의 대화를 니어가줘." + " ".join([f"{msg['role']}: {msg['content']}" for msg in chat_history])},
         {"role": "user", "content": chat_request.message}
     ],
     max_tokens=200,
