@@ -75,7 +75,7 @@ def evaluate_overall_depression(chat_history) -> dict:
 def analyze_overall_chat(chat_history) -> dict:
     response = client.chat.completions.create(model="gpt-3.5-turbo",
     messages=[
-        {"role": "system", "content": "다음 대화 내용을 바탕으로 우울증 상담의 관점에서 100글자 이내로 요약해 줄 수 있을까? 사용자의 대화 주제나 기분 상태 등을 포함시킬 수 있다면 그렇게 해줘. 대화 내용을 바탕으로 사용자의 상태에 중점을 두고 진단해줘.:\n"},
+        {"role": "system", "content": "다음 대화 내용을 바탕으로 우울증 상담의 관점에서 100글자 이내로 요약해 줄 수 있을까? 사용자의 대화 주제나 기분 상태 등을 포함시킬 수 있다면 그렇게 해줘. 대화 내용을 바탕으로 사용자의 상태에 중점을 두고 진단해줘. 설문에서도 우울증 관련 증세가 보인다면 그것도 추가해도 좋아.:\n"},
         {"role": "user", "content": "\n".join([f"{msg['role']}: {msg['content']}" for msg in chat_history])}
     ],
     max_tokens=150,
