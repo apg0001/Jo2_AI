@@ -705,7 +705,7 @@ def analyze_depression_trend():
     data = request.json
     print(data)
 
-    if 'weather_lst' not in data or not isinstance(data['weather_list'], list):
+    if 'weather_list' not in data or not isinstance(data['weather_list'], list):
         return jsonify({'error': 'weather_list must be a list of weather data'}), 400
 
     weather_list = data['weather_list']
