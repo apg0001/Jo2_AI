@@ -71,7 +71,7 @@ def evaluate_overall_depression(chat_history) -> dict:
     temperature=0.5)
 
     overall_assessment = response.choices[0].message.content.strip()
-    return {'assessment': overall_assessment}
+    return overall_assessment
 
 def analyze_overall_chat(chat_history) -> dict:
     response = client.chat.completions.create(model="gpt-3.5-turbo",
@@ -83,7 +83,7 @@ def analyze_overall_chat(chat_history) -> dict:
     temperature=0.5)
 
     overall_assessment = response.choices[0].message.content.strip()
-    return {'assessment': overall_assessment}
+    return overall_assessment
 
 def summarize_depression_analysis(text: str) -> str:
     """우울증 점수 및 분석을 요약하는 함수"""
