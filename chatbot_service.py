@@ -31,7 +31,7 @@ def get_chat_response(chat_history, chat_request: ChatRequest) -> ChatResponse:
         {"role": "system", "content": "너는 사용자와 일상 대화(식사, 운동 등의 여러 주제에 대해서도 대화 가능),그리고 우울증 예방 및 치료를 해주는 챗봇이 될 거야. 200자 이내로 대답해 주면 돼. 만약 사용자가 주제와 크게 벗어나는, 우리의 의도와 맞지 않은 얘기를 하면 그 부분에 대해서는 대답할 수 없다고 완곡히 거절해 주면 돼. 사용자가 대화 내용에 요구사항(존댓말 사용, 반말 사용 등)이 있다면 반영해줘. 150자 이내로 답변해줘. 다음 대화 내역을 기반으로 이전의 대화를 니어가줘." + " ".join([f"{msg['role']}: {msg['content']}" for msg in chat_history])},
         {"role": "user", "content": chat_request.message}
     ],
-    max_tokens=500,
+    max_tokens=600,
     temperature=0.5)
 
     bot_response = response.choices[0].message.content.strip()
@@ -78,7 +78,7 @@ def analyze_overall_chat(chat_history) -> dict:
         {"role": "system", "content": "다음 대화 내용을 바탕으로 우울증 상담의 관점에서 100글자 이내로 요약해 줄 수 있을까? 사용자의 대화 주제나 기분 상태 등을 포함시킬 수 있다면 그렇게 해줘. 대화 내용을 바탕으로 사용자의 상태에 중점을 두고 진단해줘. 설문에서도 우울증 관련 증세가 보인다면 그것도 추가해도 좋아.:\n"},
         {"role": "user", "content": "\n".join([f"{msg['role']}: {msg['content']}" for msg in chat_history])}
     ],
-    max_tokens=150,
+    max_tokens=300,
     temperature=0.5)
 
     overall_assessment = response.choices[0].message.content.strip()
@@ -183,31 +183,6 @@ def inference(feature):
     with torch.no_grad():
         outputs = model(feature.unsqueeze(0), torch.tensor([feature.shape[0]]))
     return tokenizer.decode(outputs["predictions"].cpu().detach().numpy())[0]
-
-# def correct_text(text, device):
-#     """음성 인식된 텍스트를 문법적으로나 의미적으로 교정합니다."""
-#     model_name = "t5-base"
-#     tokenizer = AutoTokenizer.from_pretrained(model_name)
-#     model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
-
-#     if torch.cuda.is_available() and device == "cuda":
-#         model = model.to("cuda")
-
-#     nlp = pipeline("text2text-generation", model=model, tokenizer=tokenizer, device=0 if torch.cuda.is_available() and device == "cuda" else -1)
-#     corrected_text = nlp(f"correct: {text}", max_new_tokens=50)
-
-#     return corrected_text[0]['generated_text']
-
-# def send_to_openai_chat(text):
-#     """OpenAI API에 텍스트를 보내고 응답을 받음"""
-#     response = client.chat.completions.create(model="gpt-3.5-turbo",
-#     messages=[
-#         {"role": "system", "content": "You are a helpful assistant."},
-#         {"role": "user", "content": text}
-#     ])
-#     chat_response = response.choices[0].message.content.strip()
-#     print("ChatGPT Response:", chat_response)
-#     return chat_response
 
 def upload_and_predict(filepath):
     """오디오 파일을 업로드하고 모델을 사용해 추론 후 교정 및 OpenAI API로 전송"""
