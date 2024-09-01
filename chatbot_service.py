@@ -6,7 +6,7 @@ import numpy as np
 from openspeech.models import MODEL_REGISTRY
 from openspeech.tokenizers import TOKENIZER_REGISTRY
 from omegaconf import OmegaConf
-from transformers import pipeline, AutoModelForSeq2SeqLM, AutoTokenizer
+# from transformers import pipeline, AutoModelForSeq2SeqLM, AutoTokenizer
 from models import ChatRequest, ChatResponse
 
 # OpenAI API 키 설정
@@ -28,7 +28,7 @@ phq9_questions = [
 def get_chat_response(chat_history, chat_request: ChatRequest) -> ChatResponse:
     response = client.chat.completions.create(model="gpt-3.5-turbo",
     messages=[
-        {"role": "system", "content": "너는 사용자와 일상 대화(식사, 운동 등의 여러 주제에 대해서도 대화 가능),그리고 우울증 예방 및 치료를 해주는 챗봇이 될 거야. 200자 이내로 대답해 주면 돼. 만약 사용자가 주제와 크게 벗어나는, 우리의 의도와 맞지 않은 얘기를 하면 그 부분에 대해서는 대답할 수 없다고 완곡히 거절해 주면 돼., 다음 대화 내역을 기반으로 이전의 대화를 니어가줘." + " ".join([f"{msg['role']}: {msg['content']}" for msg in chat_history])},
+        {"role": "system", "content": "너는 사용자와 일상 대화(식사, 운동 등의 여러 주제에 대해서도 대화 가능),그리고 우울증 예방 및 치료를 해주는 챗봇이 될 거야. 200자 이내로 대답해 주면 돼. 만약 사용자가 주제와 크게 벗어나는, 우리의 의도와 맞지 않은 얘기를 하면 그 부분에 대해서는 대답할 수 없다고 완곡히 거절해 주면 돼. 150자 이내로 답변해줘. 다음 대화 내역을 기반으로 이전의 대화를 니어가줘." + " ".join([f"{msg['role']}: {msg['content']}" for msg in chat_history])},
         {"role": "user", "content": chat_request.message}
     ],
     max_tokens=200,
@@ -75,7 +75,7 @@ def evaluate_overall_depression(chat_history) -> dict:
 def analyze_overall_chat(chat_history) -> dict:
     response = client.chat.completions.create(model="gpt-3.5-turbo",
     messages=[
-        {"role": "system", "content": "다음 대화를 우울증 상담의 관점에서 100글자 이내로 요약해 줄 수 있을까? 사용자의 상태에 중점을 두고 진단해줘.:\n"},
+        {"role": "system", "content": "다음 대화 내용을 바탕으로 우울증 상담의 관점에서 100글자 이내로 요약해 줄 수 있을까? 사용자의 대화 주제나 기분 상태 등을 포함시킬 수 있다면 그렇게 해줘. 대화 내용을 바탕으로 사용자의 상태에 중점을 두고 진단해줘.:\n"},
         {"role": "user", "content": "\n".join([f"{msg['role']}: {msg['content']}" for msg in chat_history])}
     ],
     max_tokens=150,
@@ -184,19 +184,19 @@ def inference(feature):
         outputs = model(feature.unsqueeze(0), torch.tensor([feature.shape[0]]))
     return tokenizer.decode(outputs["predictions"].cpu().detach().numpy())[0]
 
-def correct_text(text, device):
-    """음성 인식된 텍스트를 문법적으로나 의미적으로 교정합니다."""
-    model_name = "t5-base"
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+# def correct_text(text, device):
+#     """음성 인식된 텍스트를 문법적으로나 의미적으로 교정합니다."""
+#     model_name = "t5-base"
+#     tokenizer = AutoTokenizer.from_pretrained(model_name)
+#     model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
 
-    if torch.cuda.is_available() and device == "cuda":
-        model = model.to("cuda")
+#     if torch.cuda.is_available() and device == "cuda":
+#         model = model.to("cuda")
 
-    nlp = pipeline("text2text-generation", model=model, tokenizer=tokenizer, device=0 if torch.cuda.is_available() and device == "cuda" else -1)
-    corrected_text = nlp(f"correct: {text}", max_new_tokens=50)
+#     nlp = pipeline("text2text-generation", model=model, tokenizer=tokenizer, device=0 if torch.cuda.is_available() and device == "cuda" else -1)
+#     corrected_text = nlp(f"correct: {text}", max_new_tokens=50)
 
-    return corrected_text[0]['generated_text']
+#     return corrected_text[0]['generated_text']
 
 # def send_to_openai_chat(text):
 #     """OpenAI API에 텍스트를 보내고 응답을 받음"""
