@@ -191,6 +191,11 @@ def end_chat():
         'phq9Score': session.get('phq9_score'),
         'summary': analyze_chat
     }
+    
+    print("end to back---------------")
+    print(data_to_send)
+    print("--------------------------")
+    
     if session['completed_phq9']:
         try:
             response = requests.post(TARGET_SERVER_URL, json=data_to_send)
